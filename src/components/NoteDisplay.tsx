@@ -1,7 +1,16 @@
-
 import Showdown from 'showdown';
 
-const NoteDisplay = ({ note }) => {
+type Note = {
+  id: number;
+  title: string;
+  content: string;
+};
+
+type NoteDisplayProps = {
+  note: Note | null;
+};
+
+const NoteDisplay: React.FC<NoteDisplayProps> = ({ note }) => {
   if (!note) {
     return <div>No note selected</div>;
   }

@@ -1,4 +1,20 @@
-const NoteList = ({ notes, activeNote, onNoteSelect, onDeleteNote, className }) => {
+import React from 'react';
+
+type Note = {
+  id: number;
+  title: string;
+  content: string;
+};
+
+type NoteListProps = {
+  notes: Note[];
+  activeNote: Note | null;
+  onNoteSelect: (note: Note) => void;
+  onDeleteNote: (note: Note) => void;
+  className: string;
+};
+
+const NoteList: React.FC<NoteListProps> = ({ notes, activeNote, onNoteSelect, onDeleteNote, className }) => {
   return (
     <div className={className}>
       {notes.map((note) => (

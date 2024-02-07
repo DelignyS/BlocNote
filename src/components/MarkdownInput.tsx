@@ -1,14 +1,34 @@
-const MarkdownInput = ({ note, onNoteChange, onSaveNote }) => {
-  const handleTitleChange = (event) => {
-    onNoteChange({ ...note, title: event.target.value });
+import React, { ChangeEvent } from 'react';
+
+type Note = {
+  id: number;
+  title: string;
+  content: string;
+};
+
+type MarkdownInputProps = {
+  note: Note | null;
+  onNoteChange: (note: Note) => void;
+  onSaveNote: (note: Note) => void;
+};
+
+const MarkdownInput: React.FC<MarkdownInputProps> = ({ note, onNoteChange, onSaveNote }) => {
+  const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (note) {
+      onNoteChange({ ...note, title: event.target.value });
+    }
   };
 
-  const handleContentChange = (event) => {
-    onNoteChange({ ...note, content: event.target.value });
+  const handleContentChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    if (note) {
+      onNoteChange({ ...note, content: event.target.value });
+    }
   };
 
   const handleSaveClick = () => {
-    onSaveNote(note);
+    if (note) {
+      onSaveNote(note);
+    }
   };
 
   return (

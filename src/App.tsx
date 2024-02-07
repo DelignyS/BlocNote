@@ -1,50 +1,57 @@
-import { useState, useEffect } from 'react';
-import Modal from 'react-modal';
-import MarkdownInput from './components/MarkdownInput';
-import NoteDisplay from './components/NoteDisplay';
-import NoteList from './components/NoteList';
+import { useState, useEffect } from "react";
+import Modal from "react-modal";
+import MarkdownInput from "./components/MarkdownInput";
+import NoteDisplay from "./components/NoteDisplay";
+import NoteList from "./components/NoteList";
 
-Modal.setAppElement('#root'); // replace '#root' with the id of your app's root element
+Modal.setAppElement("#root");
+
+type Note = {
+  id: number;
+  title: string;
+  content: string;
+};
 
 const App = () => {
-  const [notes, setNotes] = useState(() => JSON.parse(localStorage.getItem('notes')) || []);
-  const [activeNote, setActiveNote] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [notes, setNotes] = useState<Note[]>(
+    () => JSON.parse(localStorage.getItem("notes") || "[]")
+  );
+  const [activeNote, setActiveNote] = useState<Note | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const handleStorageChange = () => {
-      setNotes(JSON.parse(localStorage.getItem('notes')) || []);
+      setNotes(JSON.parse(localStorage.getItem("notes") || "[]"));
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const handleNewNote = () => {
-    const newNote = { id: Date.now(), title: '', content: '' };
+    const newNote: Note = { id: Date.now(), title: "", content: "" };
     setActiveNote(newNote);
     setIsModalOpen(true);
   };
 
-  const handleNoteSelect = (note) => {
+  const handleNoteSelect = (note: Note) => {
     setActiveNote(note);
     setIsModalOpen(true);
   };
 
-  const handleSaveNote = (note) => {
-    setNotes((prevNotes) => {
+  const handleSaveNote = (note: Note) => {
+    setNotes((prevNotes: Note[]) => {
       const existingNote = prevNotes.find((n) => n.id === note.id);
       if (existingNote) {
         return prevNotes.map((n) => (n.id === note.id ? note : n));
       } else {
-        return [...prevNotes, note];
+        return [note, ...prevNotes];
       }
     });
-    setIsModalOpen(false);
   };
 
-  const handleDeleteNote = (noteToDelete) => {
-    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteToDelete.id));
+  const handleDeleteNote = (noteToDelete: Note) => {
+    setNotes((prevNotes: Note[]) => prevNotes.filter((note) => note.id !== noteToDelete.id));
     if (activeNote && activeNote.id === noteToDelete.id) {
       setActiveNote(null);
     }
@@ -62,7 +69,11 @@ const App = () => {
       />
       <NoteDisplay note={activeNote} />
       <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
-        <MarkdownInput note={activeNote} onNoteChange={setActiveNote} onSaveNote={handleSaveNote} />
+        <MarkdownInput
+          note={activeNote}
+          onNoteChange={setActiveNote}
+          onSaveNote={handleSaveNote}
+        />
       </Modal>
     </div>
   );
