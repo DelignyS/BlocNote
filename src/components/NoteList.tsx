@@ -32,7 +32,7 @@ const NoteList: React.FC<NoteListProps> = ({ notes, activeNote, onNoteSelect, on
             onClick={() => onDeleteNote(note)}
             className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-700"
           >
-            Delete
+            X
           </button>
         </div>
       ))}
